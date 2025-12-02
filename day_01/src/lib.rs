@@ -1,18 +1,3 @@
-pub struct Config {
-    pub file_path: String,
-}
-
-impl Config {
-    pub fn build(args: &[String]) -> Result<Config, String> {
-        match args {
-            [_, file_path] => Ok(Self {
-                file_path: file_path.clone(),
-            }),
-            _ => Err("usage: <program> <file>".into()),
-        }
-    }
-}
-
 enum Move {
     Left(i32),
     Right(i32),
