@@ -5,9 +5,7 @@ use std::error;
 use std::fs;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
-    let args: Vec<String> = env::args().collect();
-
-    let config = Config::build(&args)?;
+    let config = Config::build(env::args())?;
     run(config)?;
 
     Ok(())
