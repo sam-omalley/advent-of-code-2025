@@ -23,7 +23,7 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
         .filter(|x| !x.is_empty())
     {
         let bb = BatteryBank::parse(line);
-        total_a += bb.get_max(2);
+        total_a += 0;
         total_b += bb.get_max(12);
     }
 

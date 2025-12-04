@@ -25,6 +25,7 @@ impl BatteryBank {
             answer += max as u64 * 10u64.pow(digits as u32 - digit as u32 - 1);
         }
 
+        println!("{answer}");
         answer
     }
 }
