@@ -55,6 +55,26 @@ impl Map {
         self.grid.len() - 2
     }
 
+    pub fn count_neighbours(&self, x: usize, y: usize) -> u32 {
+        if x < self.min_x() || x > self.max_x() || y < self.min_y() || y > self.max_y() {
+            panic!("({x},{y}) outside bounds of grid");
+        }
+        let mut total: u32 = 0;
+
+        #[rustfmt::skip]
+        let offsets = [
+            (-1, -1), (0, -1), (1, -1),
+            (-1,  0),          (1, 0 ),
+            (-1,  1), (0, 1 ), (1, 1 ),
+        ];
+
+        for (xoff, yoff) in offsets {
+            total += self.get((x as i32 + xoff) as usize, (y as i32 + yoff) as usize) as u32;
+        }
+
+        total
+    }
+
     pub fn get_rolls(&self, deep: bool) -> u32 {
         let mut total: u32 = 0;
         let mut made_changes = true;
@@ -71,14 +91,7 @@ impl Map {
                     if map.get(x, y) == 0 {
                         continue;
                     }
-                    let count = map.get(x - 1, y - 1)
-                        + map.get(x, y - 1)
-                        + map.get(x + 1, y - 1)
-                        + map.get(x + 1, y)
-                        + map.get(x + 1, y + 1)
-                        + map.get(x, y + 1)
-                        + map.get(x - 1, y + 1)
-                        + map.get(x - 1, y);
+                    let count = map.count_neighbours(x, y);
 
                     if count < 4 {
                         total += 1;
@@ -127,6 +140,7 @@ mod tests {
         assert_eq!(map.get(5, 1), 0);
 
         map.print();
-        assert_eq!(map.get_rolls(), 13);
+        assert_eq!(map.get_rolls(true), 13);
+        assert_eq!(map.get_rolls(false), 43);
     }
 }
