@@ -16,9 +16,7 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
 
     let manifold = Manifold::parse(&contents);
 
-    for s in manifold.splitters.iter() {
-        println!("Splitter: {s:?}");
-    }
+    println!("Part 1: {}", manifold.get_num_splits());
 
     Ok(())
 }
