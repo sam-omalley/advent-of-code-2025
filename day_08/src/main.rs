@@ -5,6 +5,7 @@ use std::collections::HashSet;
 use std::env;
 use std::error;
 use std::fs;
+use std::usize;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     let config = Config::build(env::args())?;
@@ -37,6 +38,8 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
     //     println!("{p1:?} -> {p2:?} = {distance:.2}");
     // }
 
+    let mut last_connection = (Point::default(), Point::default());
+
     'outer: for (p1, p2, distance) in cloud
         .points
         .iter()
@@ -46,8 +49,18 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
             let p2 = pair.last().unwrap();
             (*p1, *p2, p1.distance(p2))
         })
-        .sorted_by(|(_, _, d1), (_, _, d2)| d1.partial_cmp(d2).unwrap()).take(config.max)
+        .sorted_by(|(_, _, d1), (_, _, d2)| d1.partial_cmp(d2).unwrap())
+        .take(if config.max > 0 {
+            config.max
+        } else {
+            usize::MAX
+        })
     {
+        if circuits.len() == 1 && circuits[0].len() == cloud.points.len() {
+            println!("Finished! {last_connection:?} = {}", (last_connection.0.0 * last_connection.1.0));
+            break;
+        }
+        last_connection = (p1.clone(), p2.clone());
         let mut candidate_circuits = HashSet::<usize>::default();
         for (idx, circuit) in circuits.iter().enumerate() {
             if circuit.contains(p1) || circuit.contains(p2) {
@@ -55,14 +68,19 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
             }
 
             if circuit.contains(p1) && circuit.contains(p2) {
-                println!("Skipped edge because it is in circuit #{idx}: {p1:?} -> {p2:?} - len: {distance:.2}");
+                println!(
+                    "Skipped edge because it is in circuit #{idx}: {p1:?} -> {p2:?} - len: {distance:.2}"
+                );
                 //println!("Grow junction box: {circuit:?}, {p1:?} {p2:?}");
                 continue 'outer;
             }
         }
 
         if candidate_circuits.is_empty() {
-            println!("New circuit #{}: {p1:?} -> {p2:?} - len: {distance:.2}", circuits.len());
+            println!(
+                "New circuit #{}: {p1:?} -> {p2:?} - len: {distance:.2}",
+                circuits.len()
+            );
             let mut junction = HashSet::new();
             junction.insert(p1.clone());
             junction.insert(p2.clone());
@@ -79,7 +97,6 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
             circuits.remove(*b_idx);
 
             continue 'outer;
-            
         } else if candidate_circuits.len() == 1 {
             let mut iter = candidate_circuits.iter();
             let a_idx = iter.next().unwrap();
@@ -87,18 +104,9 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
             circuits[*a_idx].insert(p1.clone());
             circuits[*a_idx].insert(p2.clone());
             continue 'outer;
-
         } else {
             panic!("This shouldn't happen: {}", candidate_circuits.len());
         }
-
-        //circuit.insert(p1.clone());
-        //circuit.insert(p2.clone());
-        //println!("Grow junction box: {circuit:?}, {p1:?} {p2:?}");
-
-        // If circuits is empty, or if no existing circuits contain our points. Create
-        // a new circuit.
-        //println!("New junction box: {p1:?} {p2:?}");
     }
 
     let mut lengths: Vec<usize> = circuits.iter().map(|c| c.len()).collect();

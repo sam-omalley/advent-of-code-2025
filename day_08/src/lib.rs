@@ -25,7 +25,7 @@ impl PointCloud {
 }
 
 #[derive(Hash, Default, Debug, PartialEq, PartialOrd, Ord, Eq, Clone)]
-pub struct Point(i64, i64, i64);
+pub struct Point(pub i64, pub i64, pub i64);
 
 impl Point {
     pub fn set_x(&mut self, val: i64) {
