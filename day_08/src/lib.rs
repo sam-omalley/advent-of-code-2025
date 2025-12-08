@@ -24,7 +24,7 @@ impl PointCloud {
     }
 }
 
-#[derive(Default, PartialEq, PartialOrd, Clone)]
+#[derive(Default, Debug, PartialEq, PartialOrd, Ord, Eq, Clone)]
 pub struct Point(i64, i64, i64);
 
 impl Point {
@@ -36,6 +36,13 @@ impl Point {
     }
     pub fn set_z(&mut self, val: i64) {
         self.2 = val;
+    }
+
+    pub fn distance(&self, other: &Point) -> f64 {
+        ((other.0 as f64 - self.0 as f64).powf(2.0)
+            + (other.1 as f64 - self.1 as f64).powf(2.0)
+            + (other.2 as f64 - self.2 as f64).powf(2.0))
+        .sqrt().abs()
     }
 }
 
@@ -75,5 +82,12 @@ mod tests {
         assert!(p.points.contains(&Point(984, 92, 344)));
 
         assert_eq!(p.points.len(), 20);
+    }
+
+    #[test]
+    fn distance() {
+        let distance = Point(162,817,812).distance(&Point(425,690,689));
+        eprintln!("Distance: {distance}");
+        assert!((distance - 316.902193).abs() < 0.000001);
     }
 }
