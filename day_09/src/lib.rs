@@ -33,6 +33,30 @@ impl Tiles {
 
         Ok(())
     }
+
+    pub fn print(&self, width: usize, height: usize, rectangle: Option<Rectangle>) {
+        for row in 0..height {
+            for col in 0..width {
+                let p = Point {
+                    x: col as i64,
+                    y: row as i64,
+                };
+                if let Some(r) = rectangle
+                    && r.encloses(&p)
+                {
+                    print!("O");
+                    continue;
+                }
+
+                if self.tiles.contains(&p) {
+                    print!("#");
+                } else {
+                    print!(".");
+                }
+            }
+            println!();
+        }
+    }
 }
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Ord, PartialOrd, Debug)]
@@ -41,14 +65,66 @@ pub struct Point {
     pub y: i64,
 }
 
-impl Point {}
+impl Point {
+    pub fn new(x: i64, y: i64) -> Self {
+        Point { x, y }
+    }
+}
+
+#[derive(Default, Debug, Clone, Copy)]
+pub struct Rectangle {
+    p1: Point,
+    p2: Point,
+}
+
+impl Rectangle {
+    pub fn new(p1: Point, p2: Point) -> Self {
+        Rectangle { p1, p2 }
+    }
+
+    pub fn encloses(&self, p: &Point) -> bool {
+        let min = self.min();
+        let max = self.max();
+        min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y
+    }
+
+    pub fn min(&self) -> Point {
+        Point {
+            x: self.p1.x.min(self.p2.x),
+            y: self.p1.y.min(self.p2.y),
+        }
+    }
+
+    pub fn max(&self) -> Point {
+        Point {
+            x: self.p1.x.max(self.p2.x),
+            y: self.p1.y.max(self.p2.y),
+        }
+    }
+
+    pub fn area(&self) -> i64 {
+        let min = self.min();
+        let max = self.max();
+
+        (max.x - min.x + 1) * (max.y - min.y + 1)
+    }
+
+    pub fn intersects(&self, segment: &Rectangle) -> bool {
+        let r_min = self.min();
+        let r_max = self.max();
+        let s_min = segment.min();
+        let s_max = segment.max();
+
+        !(r_min.x >= s_max.x || r_max.x <= s_min.x || r_min.y >= s_max.y || r_max.y <= s_min.y)
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
+    fn tile_map() {
         let tiles = Tiles::parse(
             "
             7,1
@@ -77,5 +153,12 @@ mod tests {
                 Point { x: 7, y: 3 },
             ]
         );
+    }
+
+    #[test]
+    fn rectangle_area() {
+        let r = Rectangle::new(Point::new(2, 5), Point::new(11, 1));
+
+        assert_eq!(r.area(), 50);
     }
 }
