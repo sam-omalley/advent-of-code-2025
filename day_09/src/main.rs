@@ -4,7 +4,6 @@ use itertools::Itertools;
 use std::env;
 use std::error;
 use std::fs;
-use std::iter::Repeat;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     let config = Config::build(env::args())?;
