@@ -1,9 +1,9 @@
 use common::Config;
 use day_10::*;
+use itertools::Itertools;
 use std::env;
 use std::error;
 use std::fs;
-use itertools::Itertools;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     let config = Config::build(env::args())?;
@@ -21,26 +21,26 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
 
         let indicator = tokens.next().unwrap();
         let indicator_mask = BitMask::parse_indicators(indicator);
-        println!("Indicator Mask: {indicator_mask}");
-        println!("Indicator: {indicator}");
-        let power = tokens.next_back().unwrap();
-
+        //println!("Indicator Mask: {indicator_mask}");
+        //println!("Indicator: {indicator}");
+        tokens.next_back().unwrap();
 
         let mut buttons = Vec::<BitMask>::default();
         for button in tokens {
-            println!("{button} -> {}", BitMask::parse_button(button));
+            //println!("{button} -> {}", BitMask::parse_button(button));
             buttons.push(BitMask::parse_button(button));
         }
-
-        println!("Power: {power}");
 
         let mut combinations: usize = 0;
         'outer: loop {
             for combos in buttons.iter().combinations(combinations) {
-                let result = combos.iter().copied().fold(BitMask::default(), |acc, x| BitMask(acc.0 ^ x.0));
+                let result = combos
+                    .iter()
+                    .copied()
+                    .fold(BitMask::default(), |acc, x| BitMask(acc.0 ^ x.0));
 
                 if result.0 == indicator_mask.0 {
-                    println!("Found answer ({combinations}): {combos:?}");
+                    //println!("Found answer ({combinations}): {combos:?}");
                     counter += combinations;
                     break 'outer;
                 }
@@ -50,6 +50,16 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
     }
 
     println!("Part 1: {counter}");
+
+    let mut total: u64 = 0;
+    for line in contents.lines().map(str::trim) {
+        let machine = Machine::parse(line);
+        println!("Machine: {machine:?}");
+        total += machine.solve();
+        println!();
+    }
+
+    println!("Part 2: {total}");
 
     Ok(())
 }
