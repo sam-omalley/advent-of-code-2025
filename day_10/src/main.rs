@@ -21,8 +21,6 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
 
         let indicator = tokens.next().unwrap();
         let indicator_mask = BitMask::parse_indicators(indicator);
-        //println!("Indicator Mask: {indicator_mask}");
-        //println!("Indicator: {indicator}");
         tokens.next_back().unwrap();
 
         let mut buttons = Vec::<BitMask>::default();
