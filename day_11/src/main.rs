@@ -30,8 +30,6 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
         println!("Part 1: {part_1_counter}");
     }
 
-    //let mut _paths = HashSet::new();
-
     if lookup.contains_key("svr") {
 
         let svr = lookup["svr"];
