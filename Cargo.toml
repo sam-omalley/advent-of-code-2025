@@ -1,4 +1,18 @@
 [workspace]
 resolver = "3"
 
-members = ["common","day_01", "day_02", "day_03", "day_04", "day_05", "day_06", "day_07", "day_08", "day_09", "day_10", "day_11", "day_12"]
+members = [
+    "common",
+    "2025/day_01",
+    "2025/day_02",
+    "2025/day_03",
+    "2025/day_04",
+    "2025/day_05",
+    "2025/day_06",
+    "2025/day_07",
+    "2025/day_08",
+    "2025/day_09",
+    "2025/day_10",
+    "2025/day_11",
+    "2025/day_12",
+]
