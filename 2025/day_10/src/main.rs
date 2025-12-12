@@ -1,5 +1,5 @@
 use common::Config;
-use day_10::*;
+use day_10_2025::*;
 use itertools::Itertools;
 use std::env;
 use std::error;

@@ -3,6 +3,8 @@ resolver = "3"
 
 members = [
     "common",
+    "2024/day_01",
+    "2024/day_02",
     "2025/day_01",
     "2025/day_02",
     "2025/day_03",

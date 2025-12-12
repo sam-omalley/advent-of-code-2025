@@ -1,5 +1,5 @@
 use common::Config;
-use day_01::get_password;
+use day_01_2025::get_password;
 use std::{env, error, fs};
 
 fn main() -> Result<(), Box<dyn error::Error>> {

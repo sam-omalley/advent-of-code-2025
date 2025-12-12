@@ -1,5 +1,5 @@
 use common::Config;
-use day_04::*;
+use day_04_2025::*;
 use std::env;
 use std::error;
 use std::fs;

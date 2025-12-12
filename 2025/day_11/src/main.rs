@@ -1,5 +1,5 @@
 use common::Config;
-use day_11::*;
+use day_11_2025::*;
 use petgraph::algo;
 use std::collections::hash_map::RandomState;
 use std::env;

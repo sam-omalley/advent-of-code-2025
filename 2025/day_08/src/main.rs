@@ -1,5 +1,5 @@
 use common::Config;
-use day_08::*;
+use day_08_2025::*;
 use itertools::Itertools;
 use std::collections::HashSet;
 use std::env;
