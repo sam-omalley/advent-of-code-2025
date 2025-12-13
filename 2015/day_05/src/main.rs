@@ -13,7 +13,7 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
     println!("Part 1: {}", part_1(contents.trim()));
-    println!("Part 1: {}", part_2(contents.trim()));
+    println!("Part 2: {}", part_2(contents.trim()));
 
     Ok(())
 }
